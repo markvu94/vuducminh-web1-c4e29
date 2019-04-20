@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>   
+    {% for item in food_list %}
+        <h3>Mon an so {{ loop.index }} </h3>
+        {{item.title}} <br>
+        {{item.description}}   <br>
+        <img src="{{item.link}}" >  
+        
+        {% if item.type == "eat" %}
+            <p>day la do an</p>
+        {% elif item.type == "drink" %}
+            <p>day la do uong</p>
+        {% endif %}
+    <a href="/food/{{ loop.index0 }}">day la mon an</a>
+        <hr>
+    {% endfor %}
+</body>
+</html>
