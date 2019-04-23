@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request, redirect
 app = Flask(__name__)
 
 food_list = [
@@ -65,6 +65,44 @@ def food():
 def detail(index):
     detail_food = food_list[index]
     return render_template("food_detail.html", detail_food = detail_food)
+
+@app.route("/food/add_food", methods=["GET", "POST"])
+def add_food():
+    if request.method == "GET":
+        return render_template("add_food.html")
+    elif request.method == "POST":
+        form = request.form
+        new_food = {
+            "title": form["title"],
+            "description": form["description"],
+            "link": form["link"],
+            "type": form["type"],
+        }
+        food_list.append(new_food)
+        return redirect("/food")
+
+info = {
+    "name" : "C4E",
+    "password": "C4E",
+}
+
+@app.route("/login", methods = ["GET", "POST"])
+def login():
+    if request.method == "GET":
+        return render_template("login.html")
+    if request.method == "POST":
+        form = request.form   
+        loop = "sai cmnr"
+        if form["name"] == info["name"] and form["password"] == info["password"]:
+            loop = "welcome"
+        return loop
+        
+@app.route("/register", methods = ["GET", "POST"]) 
+def register():
+    if request.method == "POST":
+        form = request.form
+        return "abc"
+    
 
 if __name__ == '__main__':          #kiem tra xem file co dang chay truc tiep hay khong? chay gian tiep se la == "_test_"
   app.run(debug=True)

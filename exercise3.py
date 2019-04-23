@@ -18,8 +18,11 @@ def index():
 
 @app.route("/user/<username>")
 def user(username):
-  user_name = Users[username]
-  return render_template("username.html", user_name = user_name)
+  if username in Users:
+    user_name = Users[username]
+    return render_template("username.html", user_name = user_name)
+  else:
+    return "user not found"
 
 if __name__ == '__main__':
   app.run(debug=True)

@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Your Bike</title>
+</head>
+<body>
+    {% for item in bike_list %}
+        <b>Model </b>{{ item.model }} <br><br>
+        <b>Fee </b>{{ item.fee }} <br><br>
+        <img src="{{ item.Image }}" alt="day la anh xe"> <br> <br>
+        <b>Year </b>{{ item.Year }} <br><br>
+    {% endfor %}
+</body>
+</html>
