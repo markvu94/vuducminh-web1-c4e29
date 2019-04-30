@@ -18,7 +18,9 @@
         {% elif item.type == "drink" %}
             <p>day la do uong</p>
         {% endif %}
-    <a href="/food/{{ loop.index0 }}">day la mon an</a>
+    <a href="/food/{{ item._id }}">day la mon an</a>
+    <a href="/food/edit/{{ item._id }}">sua thong tin mon an</a>
+    <a href="/food/delete/{{ item._id }}">xoa mon an</a>
         <hr>
     {% endfor %}
 </body>

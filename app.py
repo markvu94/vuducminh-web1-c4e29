@@ -1,44 +1,8 @@
 from flask import Flask, render_template, request, redirect
 app = Flask(__name__)
+from food_db import Foods
+from bson.objectid import ObjectId
 
-food_list = [
-        {
-            "title": "thit cho",
-            "description": "rat ngon",
-            "link": "https://cdnmedia.baotintuc.vn/Upload/BUnOnh8kCJUksZiuSPj5yg/files/thit%20cho(1).jpg",
-            "type": "eat"
-        },
-        {
-            "title": "thit meo",
-            "description": "rat chua",
-            "link": "https://upload.wikimedia.org/wikipedia/vi/thumb/0/0c/Thitmeo.jpg/300px-Thitmeo.jpg",
-            "type": "eat"
-        },
-        {
-            "title": "thit chuot",
-            "description": "rat thoi",
-            "link": "http://www.xaluan.com/images/news/Image/2017/12/07/95a295c786fd73.img.jpg",
-            "type": "eat"
-        },
-        {
-            "title": "nuoc chanh",
-            "description": "rat thom",
-            "link": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c8/Lemonade_%28Lime_version%29.jpg/300px-Lemonade_%28Lime_version%29.jpg",
-            "type": "drink"
-        },
-        {
-            "title": "nuoc cam",
-            "description": "rat good",
-            "link": "https://images.kienthuc.net.vn/Uploaded/dinhcuc/2018_03_24/sang/2_ULTZ.jpg",
-            "type": "drink"
-        },
-        {
-            "title": "nuoc dau",
-            "description": "rat good",
-            "link": "https://media.lamsao.com//Resources/Data/News/Auto/thuyptt/201405/58520854bf65b03bbfc36359f6781022635362634918264039.jpg",
-            "type": "drink"
-        },
-    ]
 
 @app.route('/')             #dau / khong co gi dang sau la trang chu
 def index():
@@ -59,11 +23,12 @@ def sum_total(x,y):
 
 @app.route("/food")
 def food():
+    food_list = Foods.find()
     return render_template("food.html",food_list = food_list)            #co the viet html code vao return
 
-@app.route("/food/<int:index>")
-def detail(index):
-    detail_food = food_list[index]
+@app.route("/food/<id>")
+def detail(id):
+    detail_food = Foods.find_one({"_id": ObjectId(id)})
     return render_template("food_detail.html", detail_food = detail_food)
 
 @app.route("/food/add_food", methods=["GET", "POST"])
@@ -78,8 +43,30 @@ def add_food():
             "link": form["link"],
             "type": form["type"],
         }
-        food_list.append(new_food)
+        Foods.insert_one(new_food)
         return redirect("/food")
+
+@app.route("/food/edit/<id>", methods = ["GET","POST"])
+def edit_food(id):
+    food = Foods.find_one({"_id": ObjectId(id)}) 
+    if request.method == "GET":
+        return render_template("edit_food.html", food = food) 
+    elif request.method == "POST":
+        form = request.form
+        new_value = { "$set": {
+            "title": form["title"],
+            "description": form["description"],
+            "link": form["link"],
+            "type": form["type"],
+        } }
+        Foods.update_one(food,new_value)
+        return redirect("/food")
+
+@app.route("/food/delete/<id>")
+def delete_food(id):
+    food = Foods.find_one({ "_id": ObjectId(id) })
+    Foods.delete_one(food)
+    return redirect("/food")
 
 info = {
     "name" : "C4E",
