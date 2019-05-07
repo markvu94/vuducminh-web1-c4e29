@@ -1,4 +1,5 @@
 from flask import Flask, render_template, request, redirect
+from bike_db import bike_collection
 app = Flask(__name__)
 
 
@@ -6,7 +7,7 @@ app = Flask(__name__)
 def index():
   return "Hello"
 
-bike_list = []
+
 
 @app.route("/new_bike", methods = ["GET", "POST"])
 def bike():
@@ -20,11 +21,12 @@ def bike():
       "Image": form["Image"],
       "Year": form["Year"],
     }
-    bike_list.append(new_list)
+    bike_collection.insert_one(new_list)
     return redirect("/your_bike")
 
 @app.route("/your_bike")
 def your_bike():
+  bike_list = bike_collection.find()
   return render_template("your_bike.html", bike_list = bike_list)
 
 if __name__ == '__main__':
